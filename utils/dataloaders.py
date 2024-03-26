@@ -128,7 +128,7 @@ class GermanDataset():
         test_dataset : dataframe
             test dataset
         '''
-        dataset = pd.read_csv('../data/german.data',header = None, delim_whitespace = True)
+        dataset = pd.read_csv('../data/german.data', header = None, delim_whitespace = True)
 
         dataset.columns=['Existing-Account-Status','Month-Duration','Credit-History','Purpose','Credit-Amount','Saving-Account','Present-Employment','Instalment-Rate','Sex','Guarantors','Residence','Property','Age','Installment','Housing','Existing-Credits','Job','Num-People','Telephone','Foreign-Worker','Status']
         dataset.head(5)

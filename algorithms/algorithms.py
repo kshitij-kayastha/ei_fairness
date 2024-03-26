@@ -187,6 +187,7 @@ def trainer_kde_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_
 def trainer_fb_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_blind, fairness, lambda_, optimal_effort=False, delta_effort=1, effort_iter=20, effort_lr=1, effort_norm='inf'):
     '''
     Training function for fairbatch method
+    (Loss based)
     '''
 
     train_tensors, test_tensors = dataset.get_dataset_in_tensor()
@@ -337,6 +338,7 @@ def trainer_fb_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
 def trainer_fc_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_blind, fairness, lambda_, optimal_effort=False, delta_effort=1, effort_iter=20, effort_lr=1, effort_norm='inf'):
     '''
     Training function for FC method
+    (Covariance based)
     '''
 
     train_tensors, test_tensors = dataset.get_dataset_in_tensor()
