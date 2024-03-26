@@ -35,6 +35,7 @@ class logReg(nn.Module):
         '''
         x = self.layers(x)
         return x
+    
 
 class MLP(nn.Module):
     '''

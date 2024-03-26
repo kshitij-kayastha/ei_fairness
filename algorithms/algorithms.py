@@ -184,7 +184,21 @@ def trainer_kde_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_
 
     return results
 
-def trainer_fb_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_blind, fairness, lambda_, optimal_effort=False, delta_effort=1, effort_iter=20, effort_lr=1, effort_norm='inf'):
+def trainer_fb_fair(
+    model, 
+    dataset, 
+    optimizer, 
+    device, 
+    n_epochs, 
+    batch_size, 
+    z_blind, 
+    fairness, 
+    lambda_, 
+    optimal_effort=False, 
+    delta_effort=1, 
+    effort_iter=20, 
+    effort_lr=1, 
+    effort_norm='inf'):
     '''
     Training function for fairbatch method
     (Loss based)
@@ -205,15 +219,15 @@ def trainer_fb_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
     train_dataset, val_dataset = random_split(train_dataset,[int(0.8*len(train_dataset)),len(train_dataset)-int(0.8*len(train_dataset))])
     train_loader = DataLoader(train_dataset,batch_size=batch_size,shuffle=True)
     
-    tau = 0.5
+    tau = 0.5 # threshold
     pi = torch.tensor(np.pi).to(device)
     phi = lambda x: torch.exp(-0.5*x**2)/torch.sqrt(2*pi)
 
     results = SimpleNamespace()
     loss_func = torch.nn.BCELoss(reduction = 'mean')
 
-    p_losses = []
-    f_losses = []
+    p_losses = [] # total prediction loss
+    f_losses = [] # fairness loss
 
     dp_disparities = []
     eo_disparities = []
@@ -224,8 +238,8 @@ def trainer_fb_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
 
     for epoch in tqdm.trange(n_epochs, desc="Training", unit="epochs"):
         
-        local_p_loss = []
-        local_f_loss = []
+        local_p_loss = [] # local prediction loss
+        local_f_loss = [] # local fairness loss
 
         for _, (x_batch, y_batch, z_batch) in enumerate(train_loader):
             x_batch, y_batch, z_batch = x_batch.to(device), y_batch.to(device), z_batch.to(device)
@@ -243,6 +257,7 @@ def trainer_fb_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
             if fairness == 'EI' and torch.sum(Yhat<tau)>0:
                 x_batch_e = x_batch[(Yhat<tau).reshape(-1),:]
                 z_batch_e = z_batch[(Yhat<tau).reshape(-1)]
+                # TODO: read this later
                 if optimal_effort is True:
                     Yhat_max = Optimal_effort(model, dataset, x_batch_e, delta_effort, effort_norm)
                 else:
