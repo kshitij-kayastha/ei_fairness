@@ -350,7 +350,21 @@ def trainer_fb_fair(
 
     return results
 
-def trainer_fc_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_blind, fairness, lambda_, optimal_effort=False, delta_effort=1, effort_iter=20, effort_lr=1, effort_norm='inf'):
+def trainer_fc_fair(
+    model,
+    dataset, 
+    optimizer, 
+    device, 
+    n_epochs, 
+    batch_size, 
+    z_blind, 
+    fairness, 
+    lambda_, 
+    optimal_effort=False, 
+    delta_effort=1, 
+    effort_iter=20, 
+    effort_lr=1, 
+    effort_norm='inf'):
     '''
     Training function for FC method
     (Covariance based)
@@ -371,7 +385,7 @@ def trainer_fc_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
     train_dataset, val_dataset = random_split(train_dataset,[int(0.8*len(train_dataset)),len(train_dataset)-int(0.8*len(train_dataset))])
     train_loader = DataLoader(train_dataset,batch_size=batch_size,shuffle=True)
     
-    tau = 0.5
+    tau = 0.5 # threshold
     pi = torch.tensor(np.pi).to(device)
     phi = lambda x: torch.exp(-0.5*x**2)/torch.sqrt(2*pi)
 
@@ -379,8 +393,8 @@ def trainer_fc_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
 
     loss_func = torch.nn.BCELoss()
 
-    p_losses = []
-    f_losses = []
+    p_losses = [] # total prediction loss
+    f_losses = [] # fairness loss
 
     dp_disparities = []
     eo_disparities = []
@@ -391,8 +405,8 @@ def trainer_fc_fair(model, dataset, optimizer, device, n_epochs, batch_size, z_b
 
     for epoch in tqdm.trange(n_epochs, desc="Training", unit="epochs"):
         
-        local_p_loss = []
-        local_f_loss = []
+        local_p_loss = [] # local prediction loss
+        local_f_loss = [] # local fairness loss
 
         for _, (x_batch, y_batch, z_batch) in enumerate(train_loader):
             x_batch, y_batch, z_batch = x_batch.to(device), y_batch.to(device), z_batch.to(device)
