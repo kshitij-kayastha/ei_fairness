@@ -267,7 +267,7 @@ def trainer_fb_fair(
                 loss_z = torch.zeros(len(sensitive_attrs), device = device)
                 for z in sensitive_attrs:
                     z = int(z)
-                    group_idx = z_batch_e == z
+                    group_idx = (z_batch_e == z)
                     if group_idx.sum() == 0:
                         continue
                     loss_z[z] = loss_func(Yhat_max.reshape(-1)[group_idx], torch.ones(group_idx.sum()))
@@ -288,7 +288,7 @@ def trainer_fb_fair(
                     group_idx = z_batch_e == z
                     if group_idx.sum() == 0:
                         continue
-                    loss_z[z] = (z_batch_e[z_batch_e==z].shape[0]/z_batch[z_batch==z].shape[0])*loss_func(Yhat_max.reshape(-1)[group_idx], torch.ones(group_idx.sum()))
+                    loss_z[z] = (z_batch_e[z_batch_e==z].shape[0]/ z_batch[z_batch==z].shape[0])* loss_func(Yhat_max.reshape(-1)[group_idx], torch.ones(group_idx.sum()))
                     f_loss += torch.abs(loss_z[z] - loss_mean)
 
             cost += lambda_*f_loss
